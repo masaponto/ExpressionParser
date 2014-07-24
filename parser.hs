@@ -122,14 +122,14 @@ expr = term >>- \t ->
          )
 
          +++ (
-              symbol "-" >>- \_ ->
-              expr >>- \e ->
-                  return' (t - e)
+              many (
+                    symbol "-" >>- \_  ->
+                    term
+                   ) >>- \ns ->
+              return' (foldl (-) t ns)
              )
 
-        )
-
-        +++ return' t
+        ) +++ return' t
 
        )
 
@@ -141,9 +141,7 @@ pow = factor >>- \f ->
         symbol "^" >>- \_ ->
         pow >>- \t ->
         return' (f^t)
-       )
-
-       +++ return' f
+       ) +++ return' f
       )
 
 
@@ -165,9 +163,7 @@ term = pow >>- \f ->
 
              )
 
-        )
-
-        +++ return' f
+        ) +++ return' f
 
        )
 
@@ -182,18 +178,15 @@ factor = (
            return' e
           )
 
-         )
-         +++ intNum
-
+         ) +++ intNum
 
 
 intNum :: Parser Int
 intNum = (
           symbol "-" >>- \_ ->
-          natural >>- \x ->
+          factrialP >>- \x ->
           return' (-1 * x)
          ) +++ factrialP
-
 
 
 factrialP :: Parser Int
@@ -202,6 +195,7 @@ factrialP = (
              symbol "!" >>- \_ ->
              return' (factrial x)
             ) +++ natural
+
 
 
 factrial :: Int -> Int
