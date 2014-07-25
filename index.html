@@ -7,46 +7,60 @@
 
   <body>
 
-    <form class="form-horizontal" role="form">
+    <div id="wrap">
 
-      <div class="container">
-	<div class="form-group">
-	  <h1 class="col-sm-4 control-label" >Formula Parser</h1>
-	</div>
-      </div>
+      <form class="form-horizontal" role="form">
 
-      <div class="container">
-	<div class="form-group">
-	  <label for="inputText" class="col-sm-2 control-label" >IN</label>
-
-	  <div class="col-sm-10">
-	    <input type="text" class="form-control" id="inputText" placeholder="formula">
-	  </div>
-	</div>
-      </div>
-
-      <div class="container" >
-	<div class="form-group">
-	  <label for="outputText" class="col-sm-2 control-label" >OUT</label>
-
-	  <div class="col-sm-10">
-	    <input type="text" class="form-control" id="outputText" readonly="readonly" >
-	  </div>
-	</div>
-      </div>
-
-      <!--
+	<div class="container">
 	  <div class="form-group">
-	    <div class="col-sm-offset-2 col-sm-10">
-	      <button type="submit" class="btn btn-default">Nothing</button>
-	    </div>
+	    <p class="navbar-text pull-left">
+	      <h1>Formula Parser</h1>
+	    </p>
 	  </div>
-	  -->
+	</div>
 
-      <link href="css/bootstrap.css" rel="stylesheet">
-      <script src="js/bootstrap.js"></script>
-      <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-      <script src="parser.js"></script>
+	<div class="container">
+	  <div class="form-group">
+	    <label for="inputText" class="col-sm-2 control-label" >IN</label>
+
+	    <div class="col-sm-10">
+	      <input type="text" class="form-control" id="inputText" placeholder="formula">
+	    </div>
+
+	  </div>
+	</div>
+
+	<div class="container" >
+	  <div class="form-group">
+	    <label for="outputText" class="col-sm-2 control-label" >OUT</label>
+
+	    <div class="col-sm-10">
+	      <input type="text" class="form-control" id="outputText" readonly="readonly" >
+	    </div>
+
+	  </div>
+	</div>
+
+    </div>
+    <!-- /wrap-->
+
+    <!-- footer -->
+    <div id="footer">
+      <div class="container">
+
+	<p class="navbar-text pull-right">
+          Developed by  <a href="https://twitter.com/masaponto">@masaponto</a>
+        </p>
+
+      </div>
+    </div>
+    <!-- /footer -->
+
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="sticky-footer.css" rel="stylesheet">
+    <script src="js/bootstrap.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="parser.js"></script>
 
   </body>
 
