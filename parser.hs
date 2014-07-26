@@ -109,27 +109,47 @@ symbol xs = token (string xs)
 natural :: Parser Int
 natural = token nat
 
-
 expr :: Parser Int
 expr = term >>- \t ->
        (
         (
 
          (
-          symbol "+" >>- \_ ->
-              expr >>- \e ->
-                  return' (t + e)
+          many (
+                (
+                 symbol "-" >>- \_  ->
+                 term >>- \x ->
+                 return' (-x)
+                ) +++ ( symbol "+" >>- \_ -> term)
+
+               ) >>- \ns ->
+          return' (foldl (+) t ns)
+         )
+
+        ) +++ return' t
+
+       )
+
+
+term :: Parser Int
+term = pow >>- \p ->
+       (
+        (
+
+         (
+          symbol "*" >>- \_ ->
+          term >>- \t ->
+          return' (p * t)
          )
 
          +++ (
-              many (
-                    symbol "-" >>- \_  ->
-                    term
-                   ) >>- \ns ->
-              return' (foldl (-) t ns)
+              symbol "/" >>- \_ ->
+              term >>- \t ->
+              return' (p `div` t)
+
              )
 
-        ) +++ return' t
+        ) +++ return' p
 
        )
 
@@ -139,33 +159,10 @@ pow = factor >>- \f ->
       (
        (
         symbol "^" >>- \_ ->
-        pow >>- \t ->
-        return' (f^t)
+        pow >>- \p ->
+        return' (f^p)
        ) +++ return' f
       )
-
-
-term :: Parser Int
-term = pow >>- \f ->
-       (
-        (
-
-         (
-          symbol "*" >>- \_ ->
-          term >>- \t ->
-          return' (f * t)
-         )
-
-         +++ (
-              symbol "/" >>- \_ ->
-              term >>- \t ->
-              return' (f `div` t)
-
-             )
-
-        ) +++ return' f
-
-       )
 
 
 factor :: Parser Int
@@ -197,12 +194,10 @@ factrialP = (
             ) +++ natural
 
 
-
 factrial :: Int -> Int
 factrial x
     | x == 0 = 1
     | otherwise = x * factrial(x - 1)
-
 
 
 eval :: String -> String
