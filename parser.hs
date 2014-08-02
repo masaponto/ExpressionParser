@@ -5,15 +5,14 @@ import qualified Fay.Text as T
 import Fay.FFI
 import JQuery
 import Prelude
-
 import Data.Char
 
 
 type Parser a = String -> [(a, String)]
 
 
-parseInt :: String -> Int
-parseInt = ffi "parseInt(%1)"
+parseDouble :: String -> Double
+parseDouble = ffi "parseFloat(%1)"
 
 
 item :: Parser Char
@@ -76,23 +75,8 @@ many1 p = p >>- \v ->
           return' (v:vs)
 
 
-nat :: Parser Int
-nat = many1 digit >>- \xs ->
-      return' (parseInt xs)
-
-
 space :: Parser ()
 space = many (sat isSpace) >>- \_ -> return' ()
-
-
---p :: Parser [Int]
---p = symbol "[" >>- \_ ->
---    natural >>- \n ->
---    many ( symbol "," >>- \_ ->
---           natural)  >>- \ns ->
---    symbol "]" >>- \_ ->
---    return' (n:ns)
---
 
 
 token :: Parser a -> Parser a
@@ -106,10 +90,23 @@ symbol :: String -> Parser String
 symbol xs = token (string xs)
 
 
-natural :: Parser Int
-natural = token nat
+nat :: Parser Double
+nat = many1 digit  >>- \xs->
+       (
+        ( symbol "." >>- \_ ->
+          ( many1 digit ) >>- \ys ->
+          return' $ parseDouble $ xs ++ "." ++ ys )
 
-expr :: Parser Int
+        +++ return' (parseDouble xs)
+
+       )
+
+
+decimal :: Parser Double
+decimal = token nat
+
+
+expr :: Parser Double
 expr = term >>- \t ->
        (
         (
@@ -121,7 +118,6 @@ expr = term >>- \t ->
                  term >>- \x ->
                  return' (-x)
                 ) +++ ( symbol "+" >>- \_ -> term)
-
                ) >>- \ns ->
           return' (foldl (+) t ns)
          )
@@ -131,41 +127,39 @@ expr = term >>- \t ->
        )
 
 
-term :: Parser Int
+term :: Parser Double
 term = pow >>- \p ->
        (
         (
 
          (
-          symbol "*" >>- \_ ->
-          term >>- \t ->
-          return' (p * t)
+          many (
+                (
+                 symbol "/" >>- \_  ->
+                 pow >>- \x ->
+                 return' (1/x)
+                ) +++ ( symbol "*" >>- \_ -> pow )
+               ) >>- \ns ->
+          return' (foldl (*) p ns)
          )
-
-         +++ (
-              symbol "/" >>- \_ ->
-              term >>- \t ->
-              return' (p `div` t)
-
-             )
 
         ) +++ return' p
 
        )
 
 
-pow :: Parser Int
+pow :: Parser Double
 pow = factor >>- \f ->
       (
        (
         symbol "^" >>- \_ ->
         pow >>- \p ->
-        return' (f^p)
+        return' (f ** p)
        ) +++ return' f
       )
 
 
-factor :: Parser Int
+factor :: Parser Double
 factor = (
 
           symbol "(" >>- \_ ->
@@ -178,7 +172,7 @@ factor = (
          ) +++ intNum
 
 
-intNum :: Parser Int
+intNum :: Parser Double
 intNum = (
           symbol "-" >>- \_ ->
           factrialP >>- \x ->
@@ -186,18 +180,54 @@ intNum = (
          ) +++ factrialP
 
 
-factrialP :: Parser Int
+factrialP :: Parser Double
 factrialP = (
-             natural >>- \x ->
+             decimal >>- \x ->
              symbol "!" >>- \_ ->
-             return' (factrial x)
-            ) +++ natural
+             -- return' $ factorial x
+                 return' ( fixDouble $ gamma $ x + 1 )
+            ) +++ decimal
 
 
-factrial :: Int -> Int
-factrial x
-    | x == 0 = 1
-    | otherwise = x * factrial(x - 1)
+
+
+-- isDicimal :: Double -> Bool
+-- isDicimal x = (take 1 as) /= "0"
+--     where as = tail $ dropWhile (/= '.') $ show x
+--
+--
+-- factorial :: Double -> Double
+-- factorial x
+--     | isDicimal x = gamma (x + 1)
+--     | otherwise = product [2..x]
+--
+
+
+
+fixDouble :: Double -> Double
+fixDouble x
+    | isFixable x = ( parseDouble $ takeWhile (/= '.') $ show x ) + 1
+    | otherwise = x
+
+
+isFixable :: Double -> Bool
+isFixable x = (take 4 as) == "9999"
+    where as = tail $ dropWhile (/= '.') $ show x
+
+
+gamma :: Double -> Double
+gamma x = sqrt(2.0*pi) * (x+mu)**(x-0.5) * e**(-(x + mu)) * (largeA x)
+
+    where e = 2.71828182846
+          mu = 4.5
+          c0 =   1.000000000178
+          c1 =  76.180091729406
+          c2 = -86.505320327112
+          c3 =  24.014098222230
+          c4 =  -1.231739516140
+          c5 =   0.001208580030
+          c6 =  -0.000005363820
+          largeA y = c0 + c1/y + c2/(y+1.0) + c3/(y+2.0) + c4/(y+3.0) + c5/(y+4.0) + c6/(y+5.0)
 
 
 eval :: String -> String
