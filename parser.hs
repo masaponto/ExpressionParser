@@ -147,9 +147,8 @@ term = pow >>- \p ->
 
        )
 
-
 pow :: Parser Double
-pow = factor >>- \f ->
+pow = factrialP >>- \f ->
       (
        (
         symbol "^" >>- \_ ->
@@ -157,6 +156,27 @@ pow = factor >>- \f ->
         return' (f ** p)
        ) +++ return' f
       )
+
+
+factrialP :: Parser Double
+factrialP =  factor >>- \f ->
+             (
+              symbol "!" >>- \_ ->
+              -- return' $ factorial x
+              return' (fixDouble $ gamma $ f + 1 )
+            ) +++ return' f
+
+
+-- isDicimal :: Double -> Bool
+-- isDicimal x = (take 1 as) /= "0"
+--     where as = tail $ dropWhile (/= '.') $ show x
+--
+--
+-- factorial :: Double -> Double
+-- factorial x
+--     | isDicimal x = gamma (x + 1)
+--     | otherwise = product [2..x]
+--
 
 
 factor :: Parser Double
@@ -175,33 +195,9 @@ factor = (
 number :: Parser Double
 number = (
           symbol "-" >>- \_ ->
-          factrialP >>- \x ->
+          decimal >>- \x ->
           return' (-1 * x)
-         ) +++ factrialP
-
-
-factrialP :: Parser Double
-factrialP = (
-             decimal >>- \x ->
-             symbol "!" >>- \_ ->
-             -- return' $ factorial x
-                 return' ( fixDouble $ gamma $ x + 1 )
-            ) +++ decimal
-
-
-
-
--- isDicimal :: Double -> Bool
--- isDicimal x = (take 1 as) /= "0"
---     where as = tail $ dropWhile (/= '.') $ show x
---
---
--- factorial :: Double -> Double
--- factorial x
---     | isDicimal x = gamma (x + 1)
---     | otherwise = product [2..x]
---
-
+         ) +++ decimal
 
 
 fixDouble :: Double -> Double
@@ -211,7 +207,7 @@ fixDouble x
 
 
 isFixable :: Double -> Bool
-isFixable x = (take 4 as) == "9999"
+isFixable x = (take 2 as) == "99"
     where as = tail $ dropWhile (/= '.') $ show x
 
 

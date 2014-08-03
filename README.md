@@ -1,4 +1,4 @@
-# Formula Parser
+# Expression Parser
 
 ## URL
 http://masaponto.github.io/ExpressionParser/
