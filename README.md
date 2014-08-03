@@ -1,7 +1,7 @@
 # Formula Parser
 
 ## URL
-http://masaponto.github.io/FormulaParser/
+http://masaponto.github.io/ExpressionParser/
 
 ## Requires
 - fay 0.20.1.1
