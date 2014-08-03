@@ -169,11 +169,11 @@ factor = (
            return' e
           )
 
-         ) +++ intNum
+         ) +++ number
 
 
-intNum :: Parser Double
-intNum = (
+number :: Parser Double
+number = (
           symbol "-" >>- \_ ->
           factrialP >>- \x ->
           return' (-1 * x)
