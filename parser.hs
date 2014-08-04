@@ -148,7 +148,7 @@ term = pow >>- \p ->
        )
 
 pow :: Parser Double
-pow = factrialP >>- \f ->
+pow = factorialP >>- \f ->
       (
        (
         symbol "^" >>- \_ ->
@@ -158,8 +158,8 @@ pow = factrialP >>- \f ->
       )
 
 
-factrialP :: Parser Double
-factrialP =  factor >>- \f ->
+factorialP :: Parser Double
+factorialP =  factor >>- \f ->
              (
               symbol "!" >>- \_ ->
               -- return' $ factorial x
