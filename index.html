@@ -3,6 +3,12 @@
   <head>
     <meta charser="utf-8">
     <title>ExpressionParser</title>
+
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="sticky-footer.css" rel="stylesheet">
+    <script src="js/bootstrap.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
   </head>
 
   <body>
@@ -14,41 +20,39 @@
       <div class="container">
 	<div class="jumbotron">
 
-      <form class="form-horizontal" role="form">
+	  <form class="form-horizontal" role="form">
 
-	<div class="container">
-	  <div class="form-group">
+	    <div class="container">
+	      <div class="form-group">
 
-	      <h1>Expression Parser</h1>
-	      <p> Calculate the Answer to the Ultimate Question of Life, the Universe, and Everything </p>
+		<h1>Expression Parser</h1>
+		<p> Calculate the Answer to the Ultimate Question of Life, the Universe, and Everything </p>
 
-	  </div>
-	</div>
-
-
-	  <div class="form-group">
-	    <label for="inputText" class="col-sm-1 control-label" >IN</label>
-
-	    <div class="col-sm-11">
-	      <input type="text" class="form-control" id="inputText" placeholder="expression">
+	      </div>
 	    </div>
 
 
-	</div>
-
-
-	  <div class="form-group">
-	    <label for="outputText" class="col-sm-1 control-label" >OUT</label>
-
-	    <div class="col-sm-11">
-	      <input type="text" class="form-control" id="outputText" readonly="readonly">
+	    <div class="form-group">
+	      <label for="inputText" class="col-sm-1 control-label" >IN</label>
+	      <div class="col-sm-11">
+		<input type="text" class="form-control" id="inputText" placeholder="expression">
+	      </div>
 	    </div>
 
-	  </div>
 
+	    <div class="form-group">
+	      <label for="outputText" class="col-sm-1 control-label" >OUT</label>
+	      <div class="col-sm-11">
+		<input type="text" class="form-control" id="outputText" readonly="readonly">
+	      </div>
+	    </div>
+
+	  </form>
 
 	</div>
       </div>
+
+
 
     </div>
     <!-- /wrap-->
@@ -65,10 +69,6 @@
     </div>
     <!-- /footer -->
 
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="sticky-footer.css" rel="stylesheet">
-    <script src="js/bootstrap.js"></script>
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="parser.js"></script>
 
   </body>

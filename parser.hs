@@ -232,7 +232,6 @@ eval xs = case parse expr xs of
              [(_,out)] -> "unused input " ++ out
              [] -> "invalid input"
 
-
 main :: Fay ()
 main = do
   input <- select $ T.pack "#inputText"
